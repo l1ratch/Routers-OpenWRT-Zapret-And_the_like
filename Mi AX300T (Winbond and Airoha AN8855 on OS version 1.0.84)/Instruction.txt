@@ -1,0 +1,35 @@
+Thanks a lot, I managed to install OpenWRT on Mi AX3000T with Winbond and Airoha AN8855 on OS version 1.0.84.
+
+1.I started with:
+[quote="remittor, post:1, topic:180490"]
+* Download [XMiR-Patcher](https://github.com/openwrt-xiaomi/xmir-patcher) and unpack into any directory
+* Execute `!START.bat` (or `run.sh` on *nix machine)
+* Execute **2**
+[/quote]
+
+2.Backup stock partitions:
+`ssh -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -v root@192.168.31.1`.
+**XMir-Patcher set the password to `root`**.
+
+```nanddump -f /tmp/BL2.bin /dev/mtd1
+nanddump -f /tmp/Nvram.bin /dev/mtd2
+nanddump -f /tmp/Bdata.bin /dev/mtd3
+nanddump -f /tmp/Factory.bin /dev/mtd4
+nanddump -f /tmp/FIP.bin /dev/mtd5
+nanddump -f /tmp/ubi.bin /dev/mtd8
+nanddump -f /tmp/KF.bin /dev/mtd12
+```
+I connected via WinSCP and saved the files.
+(Taken here: https://openwrt.org/inbox/toh/xiaomi/ax3000t#flash_instructions)
+
+3.And then continued the installation according to the instructions:
+[quote="remittor, post:1, topic:180490"]
+* Download [XMiR-Patcher](https://github.com/openwrt-xiaomi/xmir-patcher) and unpack into any directory
+* Copy UBInized image **openwrt-mediatek-filogic-xiaomi_mi-router-ax3000t-initramfs-factory.ubi** into directory **firmware**
+* Execute `!START.bat` (or `run.sh` on *nix machine)
+* Execute **7**
+* Wait 40...70 seconds
+* Browse 192.168.1.1
+* Using LuCI flash `sysupgrade` image **openwrt-mediatek-filogic-xiaomi_mi-router-ax3000t-squashfs-sysupgrade.bin**
+* Wait 40...70 seconds
+[/quote]

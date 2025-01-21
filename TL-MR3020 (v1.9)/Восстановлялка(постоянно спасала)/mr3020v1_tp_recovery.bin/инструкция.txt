@@ -1,0 +1,12 @@
+настраиваем сетевуху 192.168.0.66 подсеть 255,255,255,0
+запускаем tftpd32
+подаем на роутер питание С ЗАЖАТОЙ КНОПКОЙ RESET\WPS
+должен появиться лог:
+
+Connection received from 192.168.0.86 on port 3462 [21/08 13:12:06.765]
+Read request for file <mr3020v1_tp_recovery.bin>. Mode octet [21/08 13:12:06.765]
+OACK: <timeout=5,> [21/08 13:12:06.765]
+Using local port 2573 [21/08 13:12:06.765]
+<mr3020v1_tp_recovery.bin>: sent 7681 blks, 3932160 bytes in 1 s. 0 blk resent [21/08 13:12:07.984]
+
+ждем пока не появится сеть WIFI. Всем удачи!)))))))))))))))

@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Ссылка на пакет Dropbear (HTTP)
+DROPBEAR_URL="http://домен.ку/dropbear_2015.67-1_ar71xx.ipk"
+
+# Проверяем наличие Dropbear
+if ! command -v dropbear >/dev/null 2>&1; then
+    echo "Dropbear не найден. Начинаю установку..."
+
+    # Проверяем наличие wget
+    if ! command -v wget >/dev/null 2>&1; then
+        echo "Ошибка: Wget не установлен."
+        exit 1
+    fi
+
+    # Создаем временную папку для загрузки пакета
+    TMP_DIR="/tmp/dropbear_install"
+    mkdir -p $TMP_DIR
+
+    # Скачиваем пакет Dropbear через HTTP
+    wget -O $TMP_DIR/dropbear.ipk $DROPBEAR_URL
+
+    # Проверяем, был ли файл скачан
+    if [ ! -f $TMP_DIR/dropbear.ipk ]; then
+        echo "Ошибка: Не удалось скачать пакет Dropbear."
+        rm -rf $TMP_DIR
+        exit 1
+    fi
+
+    # Устанавливаем пакет
+    opkg install $TMP_DIR/dropbear.ipk
+
+    # Проверяем успешность установки
+    if ! command -v dropbear >/dev/null 2>&1; then
+        echo "Ошибка: Установка Dropbear завершилась неудачно."
+        rm -rf $TMP_DIR
+        exit 1
+    fi
+
+    # Удаляем временные файлы
+    rm -rf $TMP_DIR
+
+    echo "Dropbear установлен."
+fi
+
+# Проверяем и создаем ключи, если их нет
+if [ ! -f /etc/dropbear/dropbear_rsa_host_key ]; then
+    echo "Генерация ключей Dropbear..."
+    mkdir -p /etc/dropbear
+    if command -v dropbearkey >/dev/null 2>&1; then
+        dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
+    else
+        echo "Ошибка: Команда dropbearkey не найдена. Проверьте установку Dropbear."
+        exit 1
+    fi
+fi
+
+# Запускаем Dropbear
+if [ -f /usr/sbin/dropbear ]; then
+    echo "Запуск Dropbear..."
+    /usr/sbin/dropbear -E -F -p 22 &
+else
+    echo "Ошибка: Файл /usr/sbin/dropbear не найден."
+    exit 1
+fi
+
+exit 0
